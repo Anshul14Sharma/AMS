@@ -1,2 +1,2 @@
 # AMS
-Atteadance management system using Play framework
+Attendance management system using Play framework
