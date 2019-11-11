@@ -1,0 +1,45 @@
+@()
+@main("AMS"){
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    $("#saveAttBtn").click(function(){
+    var inputEmail = $('#email').val();
+    console.log("email"+inputEmail);
+    var obj = {
+        email: inputEmail
+        };
+    $.ajax({
+    url: "@routes.EmployeeController.saveAttendance()",
+    data: JSON.stringify(obj),
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    type: 'POST',
+    success: function(res) {
+      if (res) {
+        console.log("Success!");
+      } else {
+        console.log("Failed...");
+      }
+    }
+  });
+   return false;
+    });
+
+    </script>
+</head>
+<body>
+<center>
+    <form id="attendanceForm", method="post" action="/attendance">
+        <label>
+            Email: <input id="email" name="email" type="email"/> <br>
+        </label><br>
+        <button id="saveAttBtn" type="Submit">Submit</button>
+    </form>
+</center>
+</body>
+</html>
+}
+
