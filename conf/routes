@@ -3,16 +3,24 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.EmployeeController.pageRenderer()
-#GET     /hello                      controllers.HomeController.hello
-
+GET      /                          controllers.Application.index
+#GET     /hello                     controllers.HomeController.hello
+GET      /checkInOut                controllers.EmployeeController.checkInCheckOut(request: Request)
 
 POST    /attendance                 controllers.EmployeeController.saveAttendance
-GET     /attendance                controllers.EmployeeController.getAttendance(email: String)
+GET     /attendance                 controllers.EmployeeController.getAttendance(email: String)
 
-GET     /check                      controllers.EmployeeController.check
+GET     /attendance/check           controllers.EmployeeController.check
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 GET     /javascriptRoutes           controllers.Application.javascriptRoutes(request: Request)
+
+GET     /register                   controllers.LoginController.registerPageRender
+POST    /register                   controllers.LoginController.register
+
+GET     /login                      controllers.LoginController.loginPageRender
+POST    /login                      controllers.LoginController.login(request: Request)
+
+GET     /logout                     controllers.LoginController.logout(request: Request)

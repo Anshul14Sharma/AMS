@@ -17,7 +17,8 @@ public class Attendance extends Model {
     @Column(name = "checkOutDT")
     private Date checkOutDT;
 
-    @OneToOne(mappedBy = "attendance")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "employeeId", referencedColumnName = "id", nullable = false)
     private Employee employee;
 
     public Attendance(Date checkInDT, Date checkOutDT) {
@@ -39,5 +40,13 @@ public class Attendance extends Model {
 
     public void setCheckOutDT(Date checkOutDT) {
         this.checkOutDT = checkOutDT;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 }

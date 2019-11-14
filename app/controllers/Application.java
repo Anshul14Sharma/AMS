@@ -18,4 +18,9 @@ public class Application extends Controller {
                         routes.javascript.EmployeeController.getAttendance()))
                 .as(Http.MimeTypes.JAVASCRIPT);
     }
+
+    public Result index() {
+        return ok(views.html.home.render());
+    }
+
 }

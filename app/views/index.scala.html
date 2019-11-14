@@ -1,45 +1,47 @@
-@()
-@main("AMS"){
-<html>
+@main("Check In/Out"){
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script type="text/javascript">
-    $("#saveAttBtn").click(function(){
-    var inputEmail = $('#email').val();
-    console.log("email"+inputEmail);
-    var obj = {
+</head>
+<div class="container">
+    <center>
+        <h2>Employee Check In/Out</h2>
+    </center>
+    <center>
+        <form id="attendanceForm">
+            <label for="email">Email:</label>
+            <input id="email" name="email" type="email" /><br>
+            <button class="button" id="saveAttBtn" type="button" onclick="saveAtt()">Submit</button>
+        </form>
+    </center>
+</div>
+<script>
+    function saveAtt(){
+        var inputEmail = $('#email').val();
+        if(inputEmail == '') {
+                window.alert("Email cannot be empty!");
+                return false;
+        }
+        var obj = {
         email: inputEmail
         };
-    $.ajax({
-    url: "@routes.EmployeeController.saveAttendance()",
-    data: JSON.stringify(obj),
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    type: 'POST',
-    success: function(res) {
-      if (res) {
-        console.log("Success!");
-      } else {
-        console.log("Failed...");
-      }
+        $.ajax({
+        url: "@routes.EmployeeController.saveAttendance()",
+        data: JSON.stringify(obj),
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        type: 'POST',
+        success: function(res) {
+        if (res == "Checked In") {
+            window.alert("Checked In Successfully!");
+        } else if(res == "Checked Out"){
+            window.alert("Checked Out Successfully!");
+        }else if(res == "404"){
+            window.alert("Employee not found");
+        }
+        }
+        });
+        return false;
     }
-  });
-   return false;
-    });
-
-    </script>
-</head>
-<body>
-<center>
-    <form id="attendanceForm", method="post" action="/attendance">
-        <label>
-            Email: <input id="email" name="email" type="email"/> <br>
-        </label><br>
-        <button id="saveAttBtn" type="Submit">Submit</button>
-    </form>
-</center>
-</body>
-</html>
+</script>
 }
-

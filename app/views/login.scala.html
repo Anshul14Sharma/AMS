@@ -1,0 +1,57 @@
+@()
+@main("Login"){
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<div class="container">
+    <center>
+        <h2>Sign in</h2>
+    </center>
+    <center>
+        <form id="registerForm">
+            <label for="email">Email:</label>
+            <input id="email" name="email" type="email" placeholder="name@@email.com" required /> <br/>
+            <label for="pwd">Password:</label>
+            <input id="pwd" name="password" type="password" required /> <br/>
+            <button class="button" type="button" onclick="login()">Submit</button>
+        </form>
+    </center>
+</div>
+<script>
+    $('.button').click(function() {
+    var email = $('#email').val();
+    var password = $('#pwd').val();
+    if(email == ''){
+        window.alert("Email cannot be empty!");
+        return false;
+    }
+    if(password == ''){
+        window.alert("Password cannot be empty!");
+        return false;
+    }
+    var obj = {
+    email: email,
+    password: password,
+    };
+    $.ajax({
+    url: "@routes.LoginController.login",
+    data: JSON.stringify(obj),
+    headers: {
+    'Content-Type': 'application/json'
+    },
+    type: 'POST',
+    success: function(res) {
+    if (res == "200") {
+    window.alert("Login Successful!");
+    window.location.replace("/checkInOut");
+    } else if(res == "401"){
+    window.alert("Invalid Credentials");
+    }
+    }
+    });
+    return false;
+    });
+</script>
+}

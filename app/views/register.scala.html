@@ -1,0 +1,70 @@
+@()
+@main("Register"){
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Registration</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<div class="container">
+    <center>
+        <h2>Register</h2>
+    </center>
+    <center>
+        <form id="registerForm">
+            Email: <input id="email" name="email" type="email" placeholder="name@@email.com" required/> <br/>
+            Password: <input id="pwd" name="password" type="password" required/> <br/>
+            FirstName: <input id="fName" name="firstName" type="text" required/> <br/>
+            LastName: <input id="lName" name="lastName" type="text" required/><br>
+            <button class="button" id="registerBtn" type="button" onclick="register()">Submit</button>
+        </form>
+    </center>
+</div>
+<script>
+    function register(){
+    var email = $('#email').val();
+    var password = $('#pwd').val();
+    var firstName = $('#fName').val();
+    var lastName = $('#lName').val()
+    if(email == ''){
+        window.alert("Email cannot be empty!");
+        return false;
+    }
+    if(password == ''){
+        window.alert("Password cannot be empty!");
+        return false;
+    }
+    if(firstName == ''){
+        window.alert("FirstName cannot be empty!");
+        return false;
+    }
+    if(lastName == ''){
+        window.alert("LastName cannot be empty!");
+        return false;
+    }
+    var obj = {
+    email: email,
+    password: password,
+    firstName: firstName,
+    lastName: lastName
+    };
+    $.ajax({
+    url: "@routes.LoginController.register",
+    data: JSON.stringify(obj),
+    headers: {
+    'Content-Type': 'application/json'
+    },
+    type: 'POST',
+    success: function(res) {
+    if (res == "1") {
+    window.alert("Registration Successful!");
+    window.location.replace("/login");
+    } else if(res == "409"){
+    window.alert("Employee Already Exists");
+    }
+    }
+    });
+    return false;
+    }
+
+</script>
+}

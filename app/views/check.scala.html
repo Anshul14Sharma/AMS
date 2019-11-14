@@ -1,21 +1,41 @@
 @()
 @main("AMS"){
-<html>
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
-<body>
-<center>
-    <h1>Check Attendance here</h1>
-    <form action="/attendance" method="get">
-        <label>
-            Email: <input id="email" name="email" type="email"/> <br>
-        </label>
-        <button type="Submit">Check</button>
-    </form>
-    <form action="/">
-        <input type="submit" value="Go back"/>
-    </form>
-</center>
-</body>
-</html>
+<div class="container">
+    <center>
+        <h2>Check your attendance here</h2>
+    </center>
+    <center>
+        <form action="/attendance" method="get">
+            <label>
+                Email: <input id="email" name="email" type="email" placeholder="name@@email.com"/> <br>
+            </label>
+            <button class="button" type="submit" >Submit</button>
+        </form>
+    </center>
+</div>
+<!--<script>-->
+<!--    function check(){-->
+<!--    var inputEmail = $('#email').val();-->
+<!--    if(inputEmail == '') {-->
+<!--            window.alert("Email cannot be empty!");-->
+<!--            return false;-->
+<!--     }-->
+<!--    $.ajax({-->
+<!--    url: "/attendance",-->
+<!--    data: "email="+inputEmail,-->
+<!--    headers: {-->
+<!--    'Content-Type': 'application/json'-->
+<!--    },-->
+<!--    type: 'GET',-->
+<!--    success: function(status) {-->
+<!--    console.log("fbcgb");-->
+<!--     return true;-->
+<!--    }-->
+<!--    });-->
+<!--&lt;!&ndash;    return false;&ndash;&gt;-->
+<!--}-->
+<!--</script>-->
 }

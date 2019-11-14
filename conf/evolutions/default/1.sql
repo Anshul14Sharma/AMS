@@ -56,23 +56,26 @@ create table tblattendance (
   idattendance                  bigint auto_increment not null,
   checkindt                     datetime(6),
   checkoutdt                    datetime(6),
+  employeeid                    bigint not null,
+  constraint uq_tblattendance_employeeid unique (employeeid),
   constraint pk_tblattendance primary key (idattendance)
 );
 
 create table tblemployee (
   id                            bigint auto_increment not null,
   email                         varchar(255),
-  attendanceid                  bigint not null,
-  constraint uq_tblemployee_attendanceid unique (attendanceid),
+  password                      varchar(255),
+  firstname                     varchar(255),
+  lastname                      varchar(255),
   constraint pk_tblemployee primary key (id)
 );
 
-alter table tblemployee add constraint fk_tblemployee_attendanceid foreign key (attendanceid) references tblattendance (idattendance) on delete restrict on update restrict;
+alter table tblattendance add constraint fk_tblattendance_employeeid foreign key (employeeid) references tblemployee (id) on delete restrict on update restrict;
 
 
 # --- !Downs
 
-alter table tblemployee drop foreign key fk_tblemployee_attendanceid;
+alter table tblattendance drop foreign key fk_tblattendance_employeeid;
 
 drop table if exists tblattendance;
 
