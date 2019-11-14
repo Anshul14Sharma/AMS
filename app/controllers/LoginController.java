@@ -63,7 +63,7 @@ public class LoginController extends Controller {
 
     public Result logout(Http.Request request) {
         Logger.info("Removing the login session::{}", request.session().getOptional("connected"));
-        return ok(views.html.login.render()).removingFromSession(request, "connected");
+        return redirect(routes.LoginController.loginPageRender()).removingFromSession(request, "connected");
     }
 
 }
