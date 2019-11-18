@@ -17,7 +17,7 @@ public class Attendance extends Model {
     @Column(name = "checkOutDT")
     private Date checkOutDT;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "employeeId", referencedColumnName = "id", nullable = false)
     private Employee employee;
 

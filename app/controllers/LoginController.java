@@ -35,9 +35,9 @@ public class LoginController extends Controller {
             emp.setLastName(lName);
             emp.setPassword(pwd);
             emp.save();
-            return ok("1");
+            return ok("200");
         } else {
-            return ok("0");
+            return ok("500");
         }
     }
 

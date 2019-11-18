@@ -1,7 +1,6 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import dao.EmployeeFinder;
 import dao.iEmployeeFinder;
 import models.Attendance;
 import models.Employee;
@@ -12,7 +11,9 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class EmployeeController extends Controller {
     @Inject
@@ -26,8 +27,12 @@ public class EmployeeController extends Controller {
                 .orElseGet(() -> ok(views.html.login.render()));
     }
 
-    public Result check() {
-        return ok(views.html.check.render());
+    public Result check(Http.Request request) {
+        return request
+                .session()
+                .getOptional("connected")
+                .map(user -> ok(views.html.check.render()))
+                .orElseGet(() -> ok(views.html.login.render()));
     }
 
     public Result saveAttendance() {
@@ -35,19 +40,22 @@ public class EmployeeController extends Controller {
         String email = form.get("email").asText();
         Employee checkedInEmp = finder.byEmail(email);
         if (checkedInEmp != null) {
-            Logger.info("attendance::{}", checkedInEmp);
-            if (checkedInEmp.getAttendance() != null) {
-                if (checkedInEmp.getAttendance().getCheckOutDT() != null) {
-                    Logger.info("attendance::{}", checkedInEmp.getAttendance().getCheckInDT());
-                    if (checkedInEmp.getAttendance().getCheckOutDT().after(checkedInEmp.getAttendance().getCheckInDT())) {
-                        doCheckIn(checkedInEmp);
+            Attendance oldAttendance = finder.byEmployeeId(String.valueOf(checkedInEmp.getId()));
+            if (oldAttendance != null) {
+                if (oldAttendance.getCheckOutDT() != null) {
+                    if (oldAttendance.getCheckInDT().getDate() < (new Date(System.currentTimeMillis()).getDate())) {
+                        Attendance addAtt = new Attendance(new Date(System.currentTimeMillis()), null);
+                        addAtt.setEmployee(checkedInEmp);
+                        addAtt.save();
                         return ok("Checked In");
                     } else {
-                        doCheckOut(checkedInEmp);
+                        oldAttendance.setCheckOutDT(new Date(System.currentTimeMillis()));
+                        oldAttendance.update();
                         return ok("Checked Out");
                     }
                 } else {
-                    doCheckOut(checkedInEmp);
+                    oldAttendance.setCheckOutDT(new Date(System.currentTimeMillis()));
+                    oldAttendance.update();
                     return ok("Checked Out");
                 }
             } else {
@@ -61,33 +69,23 @@ public class EmployeeController extends Controller {
         }
     }
 
-    private void doCheckOut(Employee checkedInEmp) {
-        Attendance oldAttendance = checkedInEmp.getAttendance();
-        oldAttendance.setCheckOutDT(new Date(System.currentTimeMillis()));
-        oldAttendance.update();
-    }
-
-    private void doCheckIn(Employee checkedInEmp) {
-        Attendance oldAttendance = checkedInEmp.getAttendance();
-        oldAttendance.setCheckInDT(new Date(System.currentTimeMillis()));
-        oldAttendance.update();
-    }
-
-
     public Result getAttendance(String email) {
         Logger.info("email::{}", email);
-        String checkInDT = null;
-        String checkOutDT = null;
         Employee oldEmployee = finder.byEmail(email);
-        if (oldEmployee.getAttendance() != null) {
+        List<String> checkInDT = new ArrayList<>();
+        List<String> checkOutDT = new ArrayList<>();
+        List<Attendance> attendances = finder.listByEmployeeId(String.valueOf(oldEmployee.getId()));
+        if (attendances != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY hh:mm:ss a");
-            checkInDT = dateFormat.format(oldEmployee.getAttendance().getCheckInDT());
-            if (oldEmployee.getAttendance().getCheckOutDT() != null) {
-                checkOutDT = dateFormat.format(oldEmployee.getAttendance().getCheckOutDT());
-            } else {
-                checkOutDT = "";
+            for (Attendance att : attendances) {
+                checkInDT.add(dateFormat.format(att.getCheckInDT()));
+                if (att.getCheckOutDT() != null) {
+                    checkOutDT.add(dateFormat.format(att.getCheckOutDT()));
+                } else {
+                    checkOutDT.add("");
+                }
             }
-
+            Logger.info("attendance::{}, ::{}", checkInDT, checkOutDT);
         } else {
             return notFound(views.html.notfound.render(email));
         }

@@ -1,18 +1,20 @@
-@(fName:String)(lName: String)(checkInDT: String)(checkOutDT: String)
+@(fName:String)(lName: String)(checkInDT: List[String])(checkOutDT: List[String])
 @main("AMS"){
-<div>
+<div class="container">
+    <h2 style="text-align:left;float:left;" >First Name : @fName</h2>&nbsp;
+    <h2 style="text-align:right;float:right;">Last Name : @lName</h2>
     <table id="emp">
         <tr>
-            <th>FirstName</th>
-            <th>LastName</th>
             <th>Checked In Date Time</th>
             <th>Checked Out Date Time</th>
         </tr>
         <tr>
-            <td>@fName</td>
-            <td>@lName</td>
-            <td>@checkInDT</td>
-            <td>@checkOutDT</td>
+            @for(in <- checkInDT){
+            <td>@in</td>
+            }
+            @for(out <- checkOutDT){
+            <td>@out</td>
+            }
         </tr>
     </table>
 </div>

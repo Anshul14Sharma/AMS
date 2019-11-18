@@ -4,7 +4,6 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.routing.JavaScriptReverseRouter;
-import router.Routes;
 
 public class Application extends Controller {
     public Result javascriptRoutes(Http.Request request) {

@@ -57,7 +57,6 @@ create table tblattendance (
   checkindt                     datetime(6),
   checkoutdt                    datetime(6),
   employeeid                    bigint not null,
-  constraint uq_tblattendance_employeeid unique (employeeid),
   constraint pk_tblattendance primary key (idattendance)
 );
 
@@ -70,12 +69,14 @@ create table tblemployee (
   constraint pk_tblemployee primary key (id)
 );
 
+create index ix_tblattendance_employeeid on tblattendance (employeeid);
 alter table tblattendance add constraint fk_tblattendance_employeeid foreign key (employeeid) references tblemployee (id) on delete restrict on update restrict;
 
 
 # --- !Downs
 
 alter table tblattendance drop foreign key fk_tblattendance_employeeid;
+drop index ix_tblattendance_employeeid on tblattendance;
 
 drop table if exists tblattendance;
 

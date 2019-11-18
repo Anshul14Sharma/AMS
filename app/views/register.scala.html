@@ -15,7 +15,7 @@
             Password: <input id="pwd" name="password" type="password" required/> <br/>
             FirstName: <input id="fName" name="firstName" type="text" required/> <br/>
             LastName: <input id="lName" name="lastName" type="text" required/><br>
-            <button class="button" id="registerBtn" type="button" onclick="register()">Submit</button>
+            <button class="button" type="button" onclick="register()">Submit</button>
         </form>
     </center>
 </div>
@@ -55,16 +55,19 @@
     },
     type: 'POST',
     success: function(res) {
-    if (res == "1") {
+    if (res == "200") {
     window.alert("Registration Successful!");
     window.location.replace("/login");
     } else if(res == "409"){
     window.alert("Employee Already Exists");
+    } else{
+    window.alert("Server error!");
     }
     }
     });
     return false;
     }
+
 
 </script>
 }
