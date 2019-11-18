@@ -1,7 +1,6 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import dao.EmployeeFinder;
 import dao.iEmployeeFinder;
 import models.Employee;
 import play.Logger;
@@ -14,6 +13,7 @@ import javax.inject.Inject;
 public class LoginController extends Controller {
     @Inject
     private iEmployeeFinder finder;
+
     public Result registerPageRender() {
         return ok(views.html.register.render());
     }
@@ -58,7 +58,7 @@ public class LoginController extends Controller {
                 return ok("401");
             }
         }
-       return ok("0");
+        return ok("500");
     }
 
     public Result logout(Http.Request request) {

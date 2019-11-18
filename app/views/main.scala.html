@@ -24,13 +24,13 @@
     <img src="https://media.glassdoor.com/sqll/2152555/nexxo-financial-corporation-il-squarelogo-1554706676559.png" id="logo">
     @if(session.containsKey("connected")){
         <a href="/logout">Logout</a>
-        <a href="/attendance/check">Check attendance</a>
-        <a href="/checkInOut">Attendance</a>
+    <a @if(title=="Check"){class="active"} href="/attendance/check">Check attendance</a>
+    <a @if(title=="CheckIn"){class="active"} href="/checkInOut">Attendance</a>
     }else{
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
+    <a @if(title=="Login"){class="active"} href="/login">Login</a>
+    <a @if(title=="Register"){class="active"} href="/register">Register</a>
     }
-    <a href="/">Home</a>
+    <a href="/" @if(title=="Home"){class="active"}>Home</a>
 </div>
 <div class="center">
     @content

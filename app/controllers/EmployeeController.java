@@ -12,7 +12,7 @@ import play.mvc.Result;
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 public class EmployeeController extends Controller {
@@ -41,25 +41,26 @@ public class EmployeeController extends Controller {
         Employee checkedInEmp = finder.byEmail(email);
         if (checkedInEmp != null) {
             Attendance oldAttendance = finder.byEmployeeId(String.valueOf(checkedInEmp.getId()));
+            Calendar calendar = Calendar.getInstance();
             if (oldAttendance != null) {
                 if (oldAttendance.getCheckOutDT() != null) {
-                    if (oldAttendance.getCheckInDT().getDate() < (new Date(System.currentTimeMillis()).getDate())) {
-                        Attendance addAtt = new Attendance(new Date(System.currentTimeMillis()), null);
+                    if (oldAttendance.getCheckInDT().getDate() < calendar.get(Calendar.DAY_OF_MONTH)) {
+                        Attendance addAtt = new Attendance(calendar.getTime(), null);
                         addAtt.setEmployee(checkedInEmp);
                         addAtt.save();
                         return ok("Checked In");
                     } else {
-                        oldAttendance.setCheckOutDT(new Date(System.currentTimeMillis()));
+                        oldAttendance.setCheckOutDT(calendar.getTime());
                         oldAttendance.update();
                         return ok("Checked Out");
                     }
                 } else {
-                    oldAttendance.setCheckOutDT(new Date(System.currentTimeMillis()));
+                    oldAttendance.setCheckOutDT(calendar.getTime());
                     oldAttendance.update();
                     return ok("Checked Out");
                 }
             } else {
-                Attendance attendance = new Attendance(new Date(System.currentTimeMillis()), null);
+                Attendance attendance = new Attendance(calendar.getTime(), null);
                 attendance.setEmployee(checkedInEmp);
                 attendance.save();
                 return ok("Checked In");
