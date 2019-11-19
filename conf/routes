@@ -4,11 +4,10 @@
 
 # An example controller showing a sample home page
 GET      /                          controllers.Application.index
-#GET     /hello                     controllers.HomeController.hello
 GET      /checkInOut                controllers.EmployeeController.checkInCheckOut(request: Request)
 
 POST    /attendance                 controllers.EmployeeController.saveAttendance
-GET     /attendance                 controllers.EmployeeController.getAttendance(email: String)
+GET     /attendance                 controllers.EmployeeController.getAttendance(email: String, request: Request)
 
 GET     /attendance/check           controllers.EmployeeController.check(request: Request)
 

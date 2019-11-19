@@ -1,21 +1,37 @@
 @(fName:String)(lName: String)(checkInDT: List[String])(checkOutDT: List[String])
 @main("Attendance"){
+<!--<head>-->
+<!--    <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">-->
+<!--</head>-->
+<!--<h2 style="text-align:left;float:left;padding-left:148px">First Name : @fName</h2>-->
+<!--<h2 style="text-align:right;float:right;">Last Name : @lName</h2>-->
 <div class="container">
-    <h2 style="text-align:left;float:left;">First Name : @fName</h2>
-    <h2 style="text-align:right;float:right;">Last Name : @lName</h2>
     <table id="emp">
+        <thead>
         <tr>
             <th>Checked In Date Time</th>
             <th>Checked Out Date Time</th>
         </tr>
+        </thead>
+        <tbody>
+        @defining({checkInDT.zip(checkOutDT)}){ checkinout=>
+        @for((in, out) <- checkinout){
         <tr>
-            @for(in <- checkInDT){
             <td>@in</td>
-            }
-            @for(out <- checkOutDT){
             <td>@out</td>
-            }
         </tr>
+        }
+        }
+        </tbody>
     </table>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#emp').DataTable();
+    });
+
+
+</script>
 }
