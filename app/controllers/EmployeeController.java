@@ -1,39 +1,33 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.action.Secured;
 import dao.iEmployeeFinder;
 import models.Attendance;
 import models.Employee;
 import play.Logger;
 import play.mvc.Controller;
-import play.mvc.Http;
 import play.mvc.Result;
+import play.mvc.Security;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
+@Security.Authenticated(Secured.class)
 public class EmployeeController extends Controller {
     @Inject
     private iEmployeeFinder finder;
 
-    public Result checkInCheckOut(Http.Request request) {
-        return request
-                .session()
-                .getOptional("connected")
-                .map(user -> ok(views.html.index.render()))
-                .orElseGet(() -> ok(views.html.login.render()));
+    public Result checkInCheckOut() {
+        return ok(views.html.index.render());
     }
 
-    public Result check(Http.Request request) {
-        return request
-                .session()
-                .getOptional("connected")
-                .map(user -> ok(views.html.check.render()))
-                .orElseGet(() -> ok(views.html.login.render()));
+    public Result check() {
+        return ok(views.html.check.render());
+
     }
 
     public Result saveAttendance() {
@@ -88,12 +82,8 @@ public class EmployeeController extends Controller {
         return true;
     }
 
-    public Result getAttendance(String email, Http.Request request) {
+    public Result getAttendance(String email) {
         Logger.info("email::{}", email);
-        Optional<String> session = request.session().getOptional("connected");
-        if (!email.equals(session.orElse(null))) {
-            return ok(views.html.login.render());
-        }
         Employee oldEmployee = finder.byEmail(email);
         if (oldEmployee != null) {
             List<String> checkInDT = new ArrayList<>();

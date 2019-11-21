@@ -4,12 +4,12 @@
 
 # An example controller showing a sample home page
 GET      /                          controllers.Application.index
-GET      /checkInOut                controllers.EmployeeController.checkInCheckOut(request: Request)
+GET      /checkInOut                controllers.EmployeeController.checkInCheckOut
 
 POST    /attendance                 controllers.EmployeeController.saveAttendance
-GET     /attendance                 controllers.EmployeeController.getAttendance(email: String, request: Request)
+GET     /attendance                 controllers.EmployeeController.getAttendance(email: String)
 
-GET     /attendance/check           controllers.EmployeeController.check(request: Request)
+GET     /attendance/check           controllers.EmployeeController.check
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

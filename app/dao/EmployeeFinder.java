@@ -6,7 +6,6 @@ import models.Employee;
 
 import javax.inject.Singleton;
 import java.util.List;
-import java.util.Set;
 
 @Singleton
 public class EmployeeFinder implements iEmployeeFinder {
@@ -18,7 +17,7 @@ public class EmployeeFinder implements iEmployeeFinder {
     }
 
     public Attendance byEmployeeId(String id){
-        return attFind.query().where().like("employeeid", id).orderBy("checkindt desc limit 1").findOne();
+        return attFind.query().where().like("employeeid", id).orderBy("checkindt desc").setMaxRows(1).findOne();
     }
 
     public List<Attendance> listByEmployeeId(String id){
@@ -27,4 +26,5 @@ public class EmployeeFinder implements iEmployeeFinder {
     public Employee byEmailAndPwd(String email, String pwd) {
         return empFind.query().where().like("email", email).and().like("password", pwd).setMaxRows(1).findOne();
     }
+
 }
