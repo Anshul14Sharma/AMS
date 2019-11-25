@@ -22,4 +22,8 @@ public class Application extends Controller {
         return ok(views.html.home.render());
     }
 
+    public Result defaultPage(String path) {
+        return ok(views.html.notfoundpage.render());
+    }
+
 }

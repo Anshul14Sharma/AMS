@@ -19,13 +19,11 @@
     <link href='@routes.Assets.versioned("images/favicon.png")' rel="shortcut icon" type="image/png">
 <!--    <script src='@routes.Assets.versioned("javascripts/hello.js")' type="text/javascript"></script>-->
 <!--    <script src='@routes.Assets.versioned("javascripts/prism.js")' type="text/javascript"></script>-->
-    <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
 <div class="topnav">
-    <img src="https://media.glassdoor.com/sqll/2152555/nexxo-financial-corporation-il-squarelogo-1554706676559.png" id="logo">
+    <img src="https://media.glassdoor.com/sqll/2152555/nexxo-financial-corporation-il-squarelogo-1554706676559.png"
+         id="logo">
     @if(session.containsKey("connected")){
         <a href="/logout">Logout</a>
     <a @if(title=="Check"){class="active"} href="/attendance/check">Check attendance</a>
@@ -43,4 +41,7 @@
 <div class="footer">
     2019 copyright
 </div>
+<script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 </html>

@@ -9,8 +9,8 @@ import java.util.List;
 
 @Singleton
 public class EmployeeFinder implements iEmployeeFinder {
-    private static final Finder<Long, Employee> empFind = new Finder<>(Employee.class);
-    private static final Finder<Long, Attendance> attFind = new Finder<>(Attendance.class);
+    private Finder<Long, Employee> empFind = new Finder<>(Employee.class);
+    private Finder<Long, Attendance> attFind = new Finder<>(Attendance.class);
 
     public Employee byEmail(String email) {
         return empFind.query().where().like("email", email).setMaxRows(1).findOne();

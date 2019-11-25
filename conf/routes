@@ -23,3 +23,5 @@ GET     /login                      controllers.LoginController.loginPageRender
 POST    /login                      controllers.LoginController.login(request: Request)
 
 GET     /logout                     controllers.LoginController.logout(request: Request)
+
+GET     /*page                      controllers.Application.defaultPage(page: String)
