@@ -11,34 +11,4 @@
         </form>
     </center>
 </div>
-<script>
-    function saveAtt(){
-        var inputEmail = $('#email').val();
-        if(inputEmail == '') {
-                window.alert("Email cannot be empty!");
-                return false;
-        }
-        var obj = {
-        email: inputEmail
-        };
-        $.ajax({
-        url: "@routes.EmployeeController.saveAttendance()",
-        data: JSON.stringify(obj),
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        type: 'POST',
-        success: function(res) {
-        if (res == "Checked In") {
-            window.alert("Checked In Successfully!");
-        } else if(res == "Checked Out"){
-            window.alert("Checked Out Successfully!");
-        }else if(res == "404"){
-            window.alert("Employee not found");
-        }
-        }
-        });
-        return false;
-    }
-</script>
 }

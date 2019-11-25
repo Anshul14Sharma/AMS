@@ -37,6 +37,7 @@ public class EmployeeController extends Controller {
         }
         String email = form.get("email").asText();
         Employee checkedInEmp = finder.byEmail(email);
+        Logger.info("emp::{}", checkedInEmp.getAttendance());
         if (checkedInEmp != null) {
             Attendance oldAttendance = finder.byEmployeeId(String.valueOf(checkedInEmp.getId()));
             Calendar calendar = Calendar.getInstance();
