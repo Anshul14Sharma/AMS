@@ -1,20 +1,26 @@
+function postRequest(url, obj, handleData){
+    $.ajax({
+    type: "POST",
+    url: url,
+    data: JSON.stringify(obj),
+    contentType: "application/json",
+    crossDomain: true,
+    //            async: false,
+    success: function (data) {
+        handleData(data);
+    }
+});
+}
 function saveAtt(){
-        var inputEmail = $('#email').val();
-        if(inputEmail == '') {
-                window.alert("Email cannot be empty!");
-                return false;
-        }
-        var obj = {
+    var inputEmail = $('#email').val();
+    if(inputEmail == '') {
+        window.alert("Email cannot be empty!");
+        return false;
+    }
+    var obj = {
         email: inputEmail
-        };
-        $.ajax({
-        url: "/attendance",
-        data: JSON.stringify(obj),
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        type: 'POST',
-        success: function(res) {
+    };
+    postRequest("/attendance", obj, function(res){
         if (res == "Checked In") {
             window.alert("Checked In Successfully!");
         } else if(res == "Checked Out"){
@@ -22,9 +28,7 @@ function saveAtt(){
         }else if(res == "404"){
             window.alert("Employee not found");
         }
-        }
-        });
-        return false;
+    });
 }
 
 function validateEmail(sEmail) {
@@ -56,23 +60,14 @@ function login(){
     email: email,
     password: password,
     };
-    $.ajax({
-    url: "/login",
-    data: JSON.stringify(obj),
-    headers: {
-    'Content-Type': 'application/json'
-    },
-    type: 'POST',
-    success: function(res) {
-    if (res == "200") {
-    window.alert("Login Successful!");
-    window.location.replace("/checkInOut");
-    } else if(res == "401"){
-    window.alert("Invalid Credentials");
-    }
-    }
+    postRequest("/login", obj, function(res){
+        if (res == "200") {
+            window.alert("Login Successful!");
+            window.location.replace("/checkInOut");
+        } else if(res == "401"){
+            window.alert("Invalid Credentials");
+        }
     });
-    return false;
 }
 
 function register(){
@@ -106,26 +101,17 @@ function register(){
     firstName: firstName,
     lastName: lastName
     };
-    $.ajax({
-    url: "/register",
-    data: JSON.stringify(obj),
-    headers: {
-    'Content-Type': 'application/json'
-    },
-    type: 'POST',
-    success: function(res) {
-    if (res == "200") {
-    window.alert("Registration Successful!");
-    window.location.replace("/login");
-    } else if(res == "409"){
-    window.alert("Employee Already Exists");
-    } else{
-    window.alert("Server error!");
-    }
-    }
+    postRequest("/register", obj, function(res){
+        if (res == "200") {
+            window.alert("Registration Successful!");
+            window.location.replace("/login");
+        } else if(res == "409"){
+            window.alert("Employee Already Exists");
+        } else{
+            window.alert("Server error!");
+        }
     });
-    return false;
-    }
+}
 
 if(document.getElementById("emp") != null){
     $(document).ready(function () {
