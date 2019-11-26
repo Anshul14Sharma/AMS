@@ -12,3 +12,6 @@ libraryDependencies += javaJdbc
 libraryDependencies ++= Seq(
   "mysql" % "mysql-connector-java" % "8.0.17"
 )
+libraryDependencies ++= Seq(
+  ehcache
+)

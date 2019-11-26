@@ -13,7 +13,7 @@ public interface iEmployeeFinder {
 
     Employee byEmailAndPwd(String email, String pwd);
 
-    Attendance byEmployeeId(String id);
+    Attendance getLatestAttendance(String id);
 
     List<Attendance> listByEmployeeId(String id);
 }

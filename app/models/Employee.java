@@ -3,8 +3,6 @@ package models;
 import io.ebean.Model;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "tblemployee")
@@ -22,13 +20,13 @@ public class Employee extends Model {
     private String firstName;
     @Column(name = "lastName")
     private String lastName;
-    @OneToMany(mappedBy = "employee")
-    private List<Attendance> attendance;
+//    @OneToMany(mappedBy = "employee")
+//    private List<Attendance> attendance;
 
-    public Employee(String email, List<Attendance> attendance) {
-        this.email = email;
-        this.attendance = attendance;
-    }
+//    public Employee(String email, List<Attendance> attendance) {
+//        this.email = email;
+//        this.attendance = attendance;
+//    }
 
     public Employee() {
 
@@ -70,11 +68,11 @@ public class Employee extends Model {
         this.lastName = lastName;
     }
 
-    public List<Attendance> getAttendance() {
-        return attendance;
-    }
-
-    public void setAttendance(List<Attendance> attendance) {
-        this.attendance = attendance;
-    }
+//    public List<Attendance> getAttendance() {
+//        return attendance;
+//    }
+//
+//    public void setAttendance(List<Attendance> attendance) {
+//        this.attendance = attendance;
+//    }
 }

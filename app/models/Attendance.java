@@ -1,6 +1,7 @@
 package models;
 
 import io.ebean.Model;
+import play.data.format.Formats;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,7 +14,9 @@ public class Attendance extends Model {
     @Column(name = "idattendance")
     private Long idAttendance;
     @Column(name = "checkInDT")
+    @Formats.DateTime(pattern = "dd/MM/YYYY hh:mm:ss a")
     private Date checkInDT;
+    @Formats.DateTime(pattern = "dd/MM/YYYY hh:mm:ss a")
     @Column(name = "checkOutDT")
     private Date checkOutDT;
 

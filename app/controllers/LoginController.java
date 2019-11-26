@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.action.EmpCache;
 import dao.iEmployeeFinder;
 import models.Employee;
 import play.Logger;
@@ -13,6 +14,9 @@ import javax.inject.Inject;
 public class LoginController extends Controller {
     @Inject
     private iEmployeeFinder finder;
+
+    @Inject
+    private EmpCache empCache;
 
     public Result registerPageRender() {
         return ok(views.html.register.render());
@@ -52,6 +56,7 @@ public class LoginController extends Controller {
             String pwd = form.get("password").asText();
             Employee alreadyExist = finder.byEmailAndPwd(email, pwd);
             if (alreadyExist != null) {
+                empCache.setSyncCacheApi(alreadyExist.getEmail());
                 return ok("200").addingToSession(request, "connected", email);
             } else {
 //                return redirect(routes.LoginController.loginPageRender()).flashing("danger", "Incorrect email or password.");
@@ -63,6 +68,7 @@ public class LoginController extends Controller {
 
     public Result logout(Http.Request request) {
         Logger.info("Removing the login session::{}", request.session().getOptional("connected"));
+        empCache.removeCache();
         return redirect(routes.LoginController.loginPageRender()).removingFromSession(request, "connected");
     }
 

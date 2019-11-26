@@ -26,7 +26,7 @@
          id="logo">
     @if(session.containsKey("connected")){
         <a href="/logout">Logout</a>
-    <a @if(title=="Check"){class="active"} href="/attendance/check">Check attendance</a>
+    <a @if(title=="Check"){class="active"} href="/attendance">Check attendance</a>
     <a @if(title=="CheckIn"){class="active"} href="/checkInOut">Attendance</a>
     }else{
     <a @if(title=="Login"){class="active"} href="/login">Login</a>
@@ -34,9 +34,7 @@
     }
     <a href="/" @if(title=="Home"){class="active"}>Home</a>
 </div>
-<div class="center">
-    @content
-</div>
+@content
 </body>
 <div class="footer">
     2019 copyright

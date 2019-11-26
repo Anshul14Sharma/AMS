@@ -1,17 +1,27 @@
 @()
 @main("Register"){
-<div class="container">
-    <center>
-        <h2>Register</h2>
-    </center>
-    <center>
-        <form id="registerForm">
-            Email: <input id="email" name="email" type="email" placeholder="name@@email.com" required/> <br/>
-            Password: <input id="pwd" name="password" type="password" required/> <br/>
-            FirstName: <input id="fName" name="firstName" type="text" required/> <br/>
-            LastName: <input id="lName" name="lastName" type="text" required/><br>
-            <button class="button" type="button" onclick="register()">Submit</button>
-        </form>
-    </center>
+<div class="center">
+    <div class="container">
+        <center>
+            <h2>Register</h2>
+        </center>
+        <center>
+            <form id="registerForm">
+                Email: <input id="email" name="email" placeholder="name@@email.com" required type="email"/> <br/>
+                Password: <input id="pwd" name="password" required type="password"/> <br/>
+                FirstName: <input id="fName" name="firstName" required type="text"/> <br/>
+                LastName: <input id="lName" name="lastName" required type="text"/><br>
+                <button class="button" onclick="register()" type="button">Submit</button>
+            </form>
+            <div>
+                <span>
+                    Already have an account?
+                </span>
+                <a href="/login">
+                    Log in
+                </a>
+            </div>
+        </center>
+    </div>
 </div>
 }

@@ -16,7 +16,7 @@ public class EmployeeFinder implements iEmployeeFinder {
         return empFind.query().where().like("email", email).setMaxRows(1).findOne();
     }
 
-    public Attendance byEmployeeId(String id){
+    public Attendance getLatestAttendance(String id) {
         return attFind.query().where().like("employeeid", id).orderBy("checkindt desc").setMaxRows(1).findOne();
     }
 

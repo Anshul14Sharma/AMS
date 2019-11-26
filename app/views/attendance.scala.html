@@ -1,6 +1,7 @@
-@(fName:String)(lName: String)(checkInDT: List[String])(checkOutDT: List[String])
+@(emp: Employee)(attendance: List[Attendance])
 @main("Attendance"){
-<div class="container">
+<div class="attcontainer">
+    <h1>Hello @emp.getFirstName @emp.getLastName</h1>
     <table id="emp">
         <thead>
         <tr>
@@ -9,13 +10,11 @@
         </tr>
         </thead>
         <tbody>
-        @defining({checkInDT.zip(checkOutDT)}){ checkinout=>
-        @for((in, out) <- checkinout){
+        @for((att) <- attendance){
         <tr>
-            <td>@in</td>
-            <td>@out</td>
+            <td>@att.getCheckInDT</td>
+            <td>@att.getCheckOutDT</td>
         </tr>
-        }
         }
         </tbody>
     </table>

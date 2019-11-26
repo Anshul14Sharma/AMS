@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.action.EmpCache;
 import controllers.action.Secured;
 import dao.iEmployeeFinder;
 import models.Attendance;
@@ -11,15 +12,16 @@ import play.mvc.Result;
 import play.mvc.Security;
 
 import javax.inject.Inject;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 @Security.Authenticated(Secured.class)
 public class EmployeeController extends Controller {
     @Inject
     private iEmployeeFinder finder;
+    @Inject
+    private EmpCache empCache;
 
     public Result checkInCheckOut() {
         return ok(views.html.index.render());
@@ -37,9 +39,9 @@ public class EmployeeController extends Controller {
         }
         String email = form.get("email").asText();
         Employee checkedInEmp = finder.byEmail(email);
-        Logger.info("emp::{}", checkedInEmp.getAttendance());
+        Logger.info("empData::{}", checkedInEmp);
         if (checkedInEmp != null) {
-            Attendance oldAttendance = finder.byEmployeeId(String.valueOf(checkedInEmp.getId()));
+            Attendance oldAttendance = finder.getLatestAttendance(String.valueOf(checkedInEmp.getId()));
             Calendar calendar = Calendar.getInstance();
             if (oldAttendance != null) {
                 if (oldAttendance.getCheckOutDT() == null) {
@@ -83,31 +85,26 @@ public class EmployeeController extends Controller {
         return true;
     }
 
-    public Result getAttendance(String email) {
-        Logger.info("email::{}", email);
-        Employee oldEmployee = finder.byEmail(email);
-        if (oldEmployee != null) {
-            List<String> checkInDT = new ArrayList<>();
-            List<String> checkOutDT = new ArrayList<>();
-            List<Attendance> attendances = finder.listByEmployeeId(String.valueOf(oldEmployee.getId()));
-            if (attendances != null) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY hh:mm:ss a");
-                for (Attendance att : attendances) {
-                    checkInDT.add(dateFormat.format(att.getCheckInDT()));
-                    if (att.getCheckOutDT() != null) {
-                        checkOutDT.add(dateFormat.format(att.getCheckOutDT()));
+    public Result getAttendance() {
+        try {
+            Optional<String> email = empCache.getSyncCacheApi();
+            if (email.isPresent()) {
+                Employee oldEmployee = finder.byEmail(email.get());
+                if (oldEmployee != null) {
+                    List<Attendance> attendances = finder.listByEmployeeId(String.valueOf(oldEmployee.getId()));
+                    if (attendances != null) {
+                        return ok(views.html.attendance.render(oldEmployee, attendances));
                     } else {
-                        checkOutDT.add("");
+                        return notFound(views.html.notfound.render(email.get()));
                     }
+                } else {
+                    return notFound(views.html.notfound.render(email.get()));
                 }
-                Logger.info("attendance::{}, ::{}", checkInDT, checkOutDT);
             } else {
-                return notFound(views.html.notfound.render(email));
+                return notFound(views.html.notfoundpage.render());
             }
-            return ok(views.html.attendance.render(oldEmployee.getFirstName(), oldEmployee.getLastName(), checkInDT, checkOutDT));
-        } else {
-            return notFound(views.html.notfound.render(email));
+        } catch (Exception e) {
+            return internalServerError();
         }
-
     }
 }

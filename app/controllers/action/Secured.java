@@ -18,4 +18,5 @@ public class Secured extends Security.Authenticator {
     public Result onUnauthorized(Http.Request request) {
         return redirect(routes.LoginController.loginPageRender());
     }
+
 }
