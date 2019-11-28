@@ -12,15 +12,7 @@ function postRequest(url, obj, handleData){
 });
 }
 function saveAtt(){
-    var inputEmail = $('#email').val();
-    if(inputEmail == '') {
-        window.alert("Email cannot be empty!");
-        return false;
-    }
-    var obj = {
-        email: inputEmail
-    };
-    postRequest("/attendance", obj, function(res){
+    postRequest("/attendance", null, function(res){
         if (res == "Checked In") {
             window.alert("Checked In Successfully!");
         } else if(res == "Checked Out"){
@@ -64,7 +56,10 @@ function login(){
         if (res == "200") {
             window.alert("Login Successful!");
             window.location.replace("/checkInOut");
-        } else if(res == "401"){
+        } else if(res == "201"){
+            window.alert("Login Successful!");
+            window.location.replace("/admin");
+        }else if(res == "401"){
             window.alert("Invalid Credentials");
         }
     });
@@ -75,6 +70,7 @@ function register(){
     var password = $('#pwd').val();
     var firstName = $('#fName').val();
     var lastName = $('#lName').val()
+    var role = $("#role").val();
     if(email == ''){
         window.alert("Email cannot be empty!");
         return false;
@@ -91,15 +87,16 @@ function register(){
         window.alert("FirstName cannot be empty!");
         return false;
     }
-    if(lastName == ''){
-        window.alert("LastName cannot be empty!");
-        return false;
-    }
+//    if(lastName == ''){
+//        window.alert("LastName cannot be empty!");
+//        return false;
+//    }
     var obj = {
     email: email,
     password: password,
     firstName: firstName,
-    lastName: lastName
+    lastName: lastName,
+    role: role
     };
     postRequest("/register", obj, function(res){
         if (res == "200") {

@@ -26,4 +26,7 @@ public class Application extends Controller {
         return ok(views.html.notfoundpage.render());
     }
 
+    public Result adminPage() {
+        return ok(views.html.adminhome.render());
+    }
 }

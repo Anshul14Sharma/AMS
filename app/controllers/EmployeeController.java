@@ -29,18 +29,13 @@ public class EmployeeController extends Controller {
 
     public Result check() {
         return ok(views.html.check.render());
-
     }
 
     public Result saveAttendance() {
-        JsonNode form = request().body().asJson();
-        if (!validateForm(form)) {
-            return badRequest();
-        }
-        String email = form.get("email").asText();
-        Employee checkedInEmp = finder.byEmail(email);
-        Logger.info("empData::{}", checkedInEmp);
-        if (checkedInEmp != null) {
+        Optional<String> email = empCache.getSyncCacheApi();
+        if (email.isPresent()) {
+            Employee checkedInEmp = finder.byEmail(email.get());
+            Logger.info("Emp::{}", checkedInEmp);
             Attendance oldAttendance = finder.getLatestAttendance(String.valueOf(checkedInEmp.getId()));
             Calendar calendar = Calendar.getInstance();
             if (oldAttendance != null) {
@@ -102,6 +97,25 @@ public class EmployeeController extends Controller {
                 }
             } else {
                 return notFound(views.html.notfoundpage.render());
+            }
+        } catch (Exception e) {
+            return internalServerError();
+        }
+    }
+
+    public Result getAdminAttendance(String email) {
+        try {
+            Employee oldEmployee = finder.byEmail(email);
+            Logger.info("empData::{}", oldEmployee);
+            if (oldEmployee != null) {
+                List<Attendance> attendances = finder.listByEmployeeId(String.valueOf(oldEmployee.getId()));
+                if (attendances != null) {
+                    return ok(views.html.attendance.render(oldEmployee, attendances));
+                } else {
+                    return notFound(views.html.notfound.render(email));
+                }
+            } else {
+                return notFound(views.html.notfound.render(email));
             }
         } catch (Exception e) {
             return internalServerError();

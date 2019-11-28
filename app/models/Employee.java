@@ -20,6 +20,9 @@ public class Employee extends Model {
     private String firstName;
     @Column(name = "lastName")
     private String lastName;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "role", referencedColumnName = "roleid")
+    private Role role;
 //    @OneToMany(mappedBy = "employee")
 //    private List<Attendance> attendance;
 
@@ -29,7 +32,6 @@ public class Employee extends Model {
 //    }
 
     public Employee() {
-
     }
 
     public Long getId() {
@@ -68,7 +70,15 @@ public class Employee extends Model {
         this.lastName = lastName;
     }
 
-//    public List<Attendance> getAttendance() {
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    //    public List<Attendance> getAttendance() {
 //        return attendance;
 //    }
 //

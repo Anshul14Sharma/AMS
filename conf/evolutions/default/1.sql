@@ -66,11 +66,22 @@ create table tblemployee (
   password                      varchar(255),
   firstname                     varchar(255),
   lastname                      varchar(255),
+  role                          bigint,
+  constraint uq_tblemployee_role unique (role),
   constraint pk_tblemployee primary key (id)
+);
+
+create table role (
+  roleid                        bigint auto_increment not null,
+  role                          varchar(255),
+  roledesc                      varchar(255),
+  constraint pk_role primary key (roleid)
 );
 
 create index ix_tblattendance_employeeid on tblattendance (employeeid);
 alter table tblattendance add constraint fk_tblattendance_employeeid foreign key (employeeid) references tblemployee (id) on delete restrict on update restrict;
+
+alter table tblemployee add constraint fk_tblemployee_role foreign key (role) references role (roleid) on delete restrict on update restrict;
 
 
 # --- !Downs
@@ -78,7 +89,11 @@ alter table tblattendance add constraint fk_tblattendance_employeeid foreign key
 alter table tblattendance drop foreign key fk_tblattendance_employeeid;
 drop index ix_tblattendance_employeeid on tblattendance;
 
+alter table tblemployee drop foreign key fk_tblemployee_role;
+
 drop table if exists tblattendance;
 
 drop table if exists tblemployee;
+
+drop table if exists role;
 

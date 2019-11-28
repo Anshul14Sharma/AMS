@@ -6,11 +6,15 @@
             <h2>Register</h2>
         </center>
         <center>
-            <form id="registerForm">
+            <form>
                 Email: <input id="email" name="email" placeholder="name@@email.com" required type="email"/> <br/>
                 Password: <input id="pwd" name="password" required type="password"/> <br/>
                 FirstName: <input id="fName" name="firstName" required type="text"/> <br/>
                 LastName: <input id="lName" name="lastName" required type="text"/><br>
+                Role: <select id="role">
+                <option value="1">Admin</option>
+                <option value="2">User</option>
+            </select><br>
                 <button class="button" onclick="register()" type="button">Submit</button>
             </form>
             <div>
