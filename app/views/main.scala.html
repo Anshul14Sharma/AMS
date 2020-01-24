@@ -12,37 +12,35 @@
 <head>
     <title>@title</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<!--    <link href='@routes.Assets.versioned("stylesheets/main.css")' media="screen" rel="stylesheet">-->
+    <link href='@routes.Assets.versioned("stylesheets/main.css")' media="screen" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"
+          crossorigin="anonymous"/>
 <!--    <link href='@routes.Assets.versioned("stylesheets/prism.css")' media="screen" rel="stylesheet">-->
     <link href='@routes.Assets.versioned("images/favicon.png")' rel="shortcut icon" type="image/png">
 <!--    <script src='@routes.Assets.versioned("javascripts/hello.js")' type="text/javascript"></script>-->
 <!--    <script src='@routes.Assets.versioned("javascripts/prism.js")' type="text/javascript"></script>-->
-    <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
 </head>
-
 <body>
-<div>
-    <header>
-       AMS
-    </header>
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/check">Check attendance</a></li>
-        </ul>
-    </nav>
+<div class="topnav">
+    <img src="https://media.glassdoor.com/sqll/2152555/nexxo-financial-corporation-il-squarelogo-1554706676559.png"
+         id="logo">
+    @if(session.containsKey("connected")){
+        <a href="/logout">Logout</a>
+    <a @if(title=="Check"){class="active"} href="/attendance">Check attendance</a>
+    <a @if(title=="CheckIn"){class="active"} href="/checkInOut">Attendance</a>
+    }else{
+    <a @if(title=="Login"){class="active"} href="/login">Login</a>
+    <a @if(title=="Register"){class="active"} href="/register">Register</a>
+    }
+    <a href="/" @if(title=="Home"){class="active"}>Home</a>
 </div>
-
-<!--<section id="top">-->
-<!--    <div class="wrapper">-->
-<!--        <img alt="logo" class="resize" src="assets/images/play_icon_reverse.svg"/>-->
-<!--&lt;!&ndash;        <center></center><h1>Attendance Management System</h1>&ndash;&gt;-->
-
-<!--    </div>-->
-<!--</section>-->
 @content
 </body>
-<footer>
-    2019 copyright
-</footer>
+<div class="footer">
+    Copyright © Your Website 2019
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
+<script src='@routes.Assets.versioned("javascripts/main.js")' type="text/javascript"></script>
 </html>

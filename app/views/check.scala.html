@@ -1,21 +1,18 @@
 @()
-@main("AMS"){
-<html>
-<head>
-</head>
-<body>
-<center>
-    <h1>Check Attendance here</h1>
-    <form action="/attendance" method="get">
-        <label>
-            Email: <input id="email" name="email" type="email"/> <br>
-        </label>
-        <button type="Submit">Check</button>
-    </form>
-    <form action="/">
-        <input type="submit" value="Go back"/>
-    </form>
-</center>
-</body>
-</html>
+@admin("Check"){
+<div class="center">
+    <div class="container">
+        <center>
+            <h2>Enter employee email</h2>
+        </center>
+        <center>
+            <form action="/admin/attendance" method="get">
+                <label>
+                    Email: <input id="email" name="email" placeholder="name@@email.com" type="email"/> <br>
+                </label>
+                <button class="button" type="submit">Submit</button>
+            </form>
+        </center>
+    </div>
+</div>
 }

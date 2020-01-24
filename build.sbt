@@ -1,6 +1,6 @@
 name := "AMS"
 
-version := "0.1"
+version := "0.3"
 
 scalaVersion := "2.13.1"
 
@@ -11,4 +11,7 @@ libraryDependencies += guice
 libraryDependencies += javaJdbc
 libraryDependencies ++= Seq(
   "mysql" % "mysql-connector-java" % "8.0.17"
+)
+libraryDependencies ++= Seq(
+  ehcache
 )

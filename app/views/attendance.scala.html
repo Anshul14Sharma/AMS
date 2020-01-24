@@ -1,16 +1,22 @@
-@(email:String)(checkInDT: String)(checkOutDT: String)
-<html>
-<head>
-</head>
-<body>
-<center>
-    <p>@email attendance.</p>
-    <label>Checked In Date: @checkInDT</label>
-    <label>Checked Out Date: @checkOutDT</label>
-    <form action="/">
-        <input type="submit" value="Go back"/>
-    </form>
-</center>
-</center>
-</body>
-</html>
+@(emp: Employee)(attendance: List[Attendance])
+@main("Attendance"){
+<div class="attcontainer">
+    <h1>Name: @emp.getFirstName @emp.getLastName</h1>
+    <table id="emp">
+        <thead>
+        <tr>
+            <th>Checked In Date Time</th>
+            <th>Checked Out Date Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for((att) <- attendance){
+        <tr>
+            <td>@att.getCheckInDT</td>
+            <td>@att.getCheckOutDT</td>
+        </tr>
+        }
+        </tbody>
+    </table>
+</div>
+}

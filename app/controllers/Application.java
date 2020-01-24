@@ -4,7 +4,6 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.routing.JavaScriptReverseRouter;
-import router.Routes;
 
 public class Application extends Controller {
     public Result javascriptRoutes(Http.Request request) {
@@ -17,5 +16,17 @@ public class Application extends Controller {
                         routes.javascript.EmployeeController.saveAttendance(),
                         routes.javascript.EmployeeController.getAttendance()))
                 .as(Http.MimeTypes.JAVASCRIPT);
+    }
+
+    public Result index() {
+        return ok(views.html.home.render());
+    }
+
+    public Result defaultPage(String path) {
+        return ok(views.html.notfoundpage.render());
+    }
+
+    public Result adminPage() {
+        return ok(views.html.adminhome.render());
     }
 }

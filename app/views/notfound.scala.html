@@ -1,9 +1,11 @@
-<html>
-<head>
-</head>
-<body>
+@(email: String)
+@main("404"){
 <center>
-    <h2>404 Not found.</h2>
+    <h2>No record found for @email</h2>
+    <p>You can
+        <a href="javascript:history.back()">go back</a>
+        to the previous page, or
+        <a href="/">return home</a>.</p>
 </center>
-</body>
-</html>
+
+}

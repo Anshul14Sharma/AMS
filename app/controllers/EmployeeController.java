@@ -1,35 +1,29 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.action.EmpCache;
+import controllers.action.Secured;
 import dao.iEmployeeFinder;
 import models.Attendance;
 import models.Employee;
-import dao.EmployeeFinder;
-import request.EmployeeForm;
 import play.Logger;
-import play.data.Form;
-import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
-import router.Routes;
-import views.html.hello;
-import views.html.index;
+import play.mvc.Security;
 
 import javax.inject.Inject;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
 
+@Security.Authenticated(Secured.class)
 public class EmployeeController extends Controller {
-
-    private final FormFactory formFactory;
-
     @Inject
-    private EmployeeController(final FormFactory formFactory) {
-        this.formFactory = formFactory;
-    }
+    private iEmployeeFinder finder;
+    @Inject
+    private EmpCache empCache;
 
-
-    public Result pageRenderer() {
+    public Result checkInCheckOut() {
         return ok(views.html.index.render());
     }
 
@@ -38,65 +32,93 @@ public class EmployeeController extends Controller {
     }
 
     public Result saveAttendance() {
-//        Form<EmployeeForm> employeeForm = formFactory.form(EmployeeForm.class).bindFromRequest();
-        JsonNode form = request().body().asJson();
-        Logger.info("email::{}", form);
-        String email = form.get("email").asText();
-        Logger.info("email::{}", email);
-        EmployeeFinder finder = new EmployeeFinder(Employee.class);
-//        if (employeeForm.hasErrors()) {
-//            return badRequest(index.render());
-//        } else {
-            Employee checkedInEmp = finder.byEmail(email);
-            if (checkedInEmp != null) {
-                if (checkedInEmp.getAttendance().getCheckOutDT() != null) {
-                    if (checkedInEmp.getAttendance().getCheckOutDT().after(checkedInEmp.getAttendance().getCheckInDT())) {
-                        Attendance oldAttendance = checkedInEmp.getAttendance();
-                        oldAttendance.setCheckInDT(new Date(System.currentTimeMillis()));
-                        checkedInEmp.update();
-                        return created(hello.render("Checked In"));
+        Optional<String> email = empCache.getSyncCacheApi();
+        if (email.isPresent()) {
+            Employee checkedInEmp = finder.byEmail(email.get());
+            Logger.info("Emp::{}", checkedInEmp);
+            Attendance oldAttendance = finder.getLatestAttendance(String.valueOf(checkedInEmp.getId()));
+            Calendar calendar = Calendar.getInstance();
+            if (oldAttendance != null) {
+                if (oldAttendance.getCheckOutDT() == null) {
+                    if (oldAttendance.getCheckInDT().getDate() == calendar.get(Calendar.DAY_OF_MONTH)) {
+                        oldAttendance.setCheckOutDT(calendar.getTime());
+                        oldAttendance.update();
+                        return ok("Checked Out");
                     } else {
-                        Attendance oldAttendance = checkedInEmp.getAttendance();
-                        oldAttendance.setCheckOutDT(new Date(System.currentTimeMillis()));
-                        checkedInEmp.update();
-                        return created(hello.render("Checked Out"));
+                        Attendance addAtt = new Attendance(calendar.getTime(), null);
+                        addAtt.setEmployee(checkedInEmp);
+                        addAtt.save();
+                        return ok("Checked In");
                     }
-
                 } else {
-                    Logger.info("Employee::{}", checkedInEmp.getAttendance().getCheckInDT());
-                    Attendance oldAttendance = checkedInEmp.getAttendance();
-                    oldAttendance.setCheckOutDT(new Date(System.currentTimeMillis()));
-                    checkedInEmp.update();
-                    return created(hello.render("Checked Out"));
+                    if (oldAttendance.getCheckInDT().getDate() < calendar.get(Calendar.DAY_OF_MONTH)) {
+                        Attendance addAtt = new Attendance(calendar.getTime(), null);
+                        addAtt.setEmployee(checkedInEmp);
+                        addAtt.save();
+                        return ok("Checked In");
+                    } else {
+                        oldAttendance.setCheckOutDT(calendar.getTime());
+                        oldAttendance.update();
+                        return ok("Checked Out");
+                    }
                 }
-
             } else {
-                Attendance attendance = new Attendance(new Date(System.currentTimeMillis()), null);
-                Employee employee = new Employee(email, attendance);
-                employee.save();
-                return created(hello.render("Checked In"));
+                Attendance attendance = new Attendance(calendar.getTime(), null);
+                attendance.setEmployee(checkedInEmp);
+                attendance.save();
+                return ok("Checked In");
             }
-//        }
+        } else {
+            return ok("404");
+        }
     }
 
-    public Result getAttendance(String email) {
-        EmployeeFinder finder = new EmployeeFinder(Employee.class);
-        Logger.info("email::{}", email);
-        String checkInDT = null;
-        String checkOutDT = null;
-        Employee oldEmployee = finder.byEmail(email);
-        if (oldEmployee != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss a");
-            checkInDT = dateFormat.format(oldEmployee.getAttendance().getCheckInDT());
-            if (oldEmployee.getAttendance().getCheckOutDT() != null) {
-                checkOutDT = dateFormat.format(oldEmployee.getAttendance().getCheckOutDT());
-            } else {
-                checkOutDT = "";
-            }
-
-        } else {
-            return notFound(views.html.notfound.render());
+    private boolean validateForm(JsonNode form) {
+        if (form.get("email").asText() == null && form.get("email").asText().isEmpty()) {
+            return false;
         }
-        return ok(views.html.attendance.render(email, checkInDT, checkOutDT));
+        return true;
+    }
+
+    public Result getAttendance() {
+        try {
+            Optional<String> email = empCache.getSyncCacheApi();
+            if (email.isPresent()) {
+                Employee oldEmployee = finder.byEmail(email.get());
+                if (oldEmployee != null) {
+                    List<Attendance> attendances = finder.listByEmployeeId(String.valueOf(oldEmployee.getId()));
+                    if (attendances != null) {
+                        return ok(views.html.attendance.render(oldEmployee, attendances));
+                    } else {
+                        return notFound(views.html.notfound.render(email.get()));
+                    }
+                } else {
+                    return notFound(views.html.notfound.render(email.get()));
+                }
+            } else {
+                return notFound(views.html.notfoundpage.render());
+            }
+        } catch (Exception e) {
+            return internalServerError();
+        }
+    }
+
+    public Result getAdminAttendance(String email) {
+        try {
+            Employee oldEmployee = finder.byEmail(email);
+            Logger.info("empData::{}", oldEmployee);
+            if (oldEmployee != null) {
+                List<Attendance> attendances = finder.listByEmployeeId(String.valueOf(oldEmployee.getId()));
+                if (attendances != null) {
+                    return ok(views.html.attendance.render(oldEmployee, attendances));
+                } else {
+                    return notFound(views.html.notfound.render(email));
+                }
+            } else {
+                return notFound(views.html.notfound.render(email));
+            }
+        } catch (Exception e) {
+            return internalServerError();
+        }
     }
 }
