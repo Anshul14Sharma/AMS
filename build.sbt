@@ -10,7 +10,7 @@ lazy val myProject = (project in file("."))
 libraryDependencies += guice
 libraryDependencies += javaJdbc
 libraryDependencies ++= Seq(
-  "mysql" % "mysql-connector-java" % "8.0.17"
+  "mysql" % "mysql-connector-java" % "5.1.36"
 )
 libraryDependencies ++= Seq(
   ehcache
